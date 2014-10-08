@@ -6,19 +6,28 @@ class SpotifyChart
   attr_reader :base_url
 
   def initialize
-    @base_url = "?"
+    @base_url = "http://charts.spotify.com/api/charts/"
   end
 
   def get_url(preference, region)
     # return a string that is the base url + / + preference + / + region + / + latest
+    "http://charts.spotify.com/api/charts/#{preference}/#{region}/latest"
+
   end
 
   def get_json(url)
+    JSON.load(open(url))
+
     # load json given a url here
     # refer to the references if you have questions about this
   end
 
   def fetch_track_album_artist(music_hash)
+    track = ""
+    i = 0
+    music_hash["tracks"].each_with_index { |track, i| }
+
+    "'#{music_hash["tracks"][i]["track_name"]}' by #{music_hash["tracks"][i]["artist_name"]} from the album #{music_hash["tracks"][i]["album_name"]}"
     # example music_hash:
     # {  
     #   "tracks" => [  
@@ -46,21 +55,26 @@ class SpotifyChart
 
 
   def most_streamed(region)
-    # call no get_url here, where preference is the string 'most_streamed',
+    most_streamed = get_url("most_streamed", region)
+    # call on get_url here, where preference is the string 'most_streamed',
     # and set it equal to a variable
+    track_hash = get_json(most_streamed)
 
+    fetch_track_album_artist(track_hash)
     # call on get_json here, using the string that get_url returns
     
     # finally, call on fetch_track_album_artist using the 
     # hash that get_json returns
+    # most_streamed returns America's most streamed track title, artist, and album
   end
 
   def most_shared(region)
-    # call no get_url here, where preference is the string 'most_shared',
+    most_shared = get_url("most_shared", region) 
+    # call on get_url here, where preference is the string 'most_shared',
     # and set it equal to a variable
-
+    track_hash = get_json(most_shared)
     # call on get_json here, using the string that get_url returns
-    
+    fetch_track_album_artist(track_hash)
     # finally, call on fetch_track_album_artist using the 
     # hash that get_json returns
   end
